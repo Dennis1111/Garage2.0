@@ -20,6 +20,7 @@ namespace Garage2._0.Models
         public String Color { get; set; }
         public String Brand { get; set; }
         public int Wheels { get; set; }
+        [Display(Name = "Parked at time")]
         public DateTime Timestamp { get; set; }
     }
 }

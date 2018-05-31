@@ -18,7 +18,7 @@ namespace Garage2._0.Controllers
         // GET: ParkedVehicles
         public ActionResult Index()
         {
-            return View(db.Employees.ToList());
+            return View(db.ParkedVehicle.ToList());
         }
 
         // GET: ParkedVehicles/Details/5
@@ -28,7 +28,7 @@ namespace Garage2._0.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ParkedVehicle parkedVehicle = db.Employees.Find(id);
+            ParkedVehicle parkedVehicle = db.ParkedVehicle.Find(id);
             if (parkedVehicle == null)
             {
                 return HttpNotFound();
@@ -51,7 +51,9 @@ namespace Garage2._0.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Employees.Add(parkedVehicle);
+                DateTime time = DateTime.Now;
+                parkedVehicle.Timestamp = time;
+                db.ParkedVehicle.Add(parkedVehicle);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -66,7 +68,7 @@ namespace Garage2._0.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ParkedVehicle parkedVehicle = db.Employees.Find(id);
+            ParkedVehicle parkedVehicle = db.ParkedVehicle.Find(id);
             if (parkedVehicle == null)
             {
                 return HttpNotFound();
@@ -97,7 +99,7 @@ namespace Garage2._0.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ParkedVehicle parkedVehicle = db.Employees.Find(id);
+            ParkedVehicle parkedVehicle = db.ParkedVehicle.Find(id);
             if (parkedVehicle == null)
             {
                 return HttpNotFound();
@@ -110,8 +112,8 @@ namespace Garage2._0.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            ParkedVehicle parkedVehicle = db.Employees.Find(id);
-            db.Employees.Remove(parkedVehicle);
+            ParkedVehicle parkedVehicle = db.ParkedVehicle.Find(id);
+            db.ParkedVehicle.Remove(parkedVehicle);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
