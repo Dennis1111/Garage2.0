@@ -57,7 +57,6 @@ namespace Garage2._0.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
             return View(parkedVehicle);
         }
 
