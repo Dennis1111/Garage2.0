@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.ComponentModel.DataAnnotations;
 
 namespace Garage2._0.Models
 {
@@ -17,9 +15,11 @@ namespace Garage2._0.Models
     public class ParkedVehicle
     {    
         public VehicleType Type { get; set; }
+        [Key]
         public String RegistrationNumber { get; set; }
         public String Color { get; set; }
         public String Brand { get; set; }
         public int Wheels { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }
