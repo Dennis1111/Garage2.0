@@ -1,23 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Garage2._0.DataAccesLayer;
+using Garage2._0.Models;
 
 namespace Garage2._0.Controllers
 {
     public class ParkedVehiclesController : Controller
     {
+        private RegisterContext db = new RegisterContext();
+
         // GET: ParkedVehicles
         public ActionResult Index()
         {
-            return View();
+            return View(db.ParkedVehicle.ToList());
         }
 
         // GET: ParkedVehicles/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(string id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ParkedVehicle parkedVehicle = db.ParkedVehicle.Find(id);
+            if (parkedVehicle == null)
+            {
+                return HttpNotFound();
+            }
+            return View(parkedVehicle);
         }
 
         // GET: ParkedVehicles/Create
@@ -27,63 +43,88 @@ namespace Garage2._0.Controllers
         }
 
         // POST: ParkedVehicles/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "RegistrationNumber,Type,Color,Brand,Wheels,Timestamp")] ParkedVehicle parkedVehicle)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add insert logic here
-
+                DateTime time = DateTime.Now;
+                parkedVehicle.Timestamp = time;
+                db.ParkedVehicle.Add(parkedVehicle);
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+
+            return View(parkedVehicle);
         }
 
         // GET: ParkedVehicles/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(string id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ParkedVehicle parkedVehicle = db.ParkedVehicle.Find(id);
+            if (parkedVehicle == null)
+            {
+                return HttpNotFound();
+            }
+            return View(parkedVehicle);
         }
 
         // POST: ParkedVehicles/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "RegistrationNumber,Type,Color,Brand,Wheels,Timestamp")] ParkedVehicle parkedVehicle)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add update logic here
-
+                db.Entry(parkedVehicle).State = EntityState.Modified;
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+            return View(parkedVehicle);
         }
 
         // GET: ParkedVehicles/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ParkedVehicle parkedVehicle = db.ParkedVehicle.Find(id);
+            if (parkedVehicle == null)
+            {
+                return HttpNotFound();
+            }
+            return View(parkedVehicle);
         }
 
         // POST: ParkedVehicles/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(string id)
         {
-            try
-            {
-                // TODO: Add delete logic here
+            ParkedVehicle parkedVehicle = db.ParkedVehicle.Find(id);
+            db.ParkedVehicle.Remove(parkedVehicle);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
 
-                return RedirectToAction("Index");
-            }
-            catch
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                return View();
+                db.Dispose();
             }
+            base.Dispose(disposing);
         }
     }
 }
